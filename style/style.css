@@ -1,0 +1,234 @@
+/*général*/
+
+* {
+   margin: 0; 
+}
+
+body {
+    font-family: 'Oswald', sans-serif;
+    padding:2%;
+    margin:0.5%;
+    border: 1px  #000000 solid;
+
+}
+
+a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+p{
+    font-size: 2em;
+    font-weight: 200;
+}
+
+/*En-tête*/
+header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: #61787F;
+    border: 1px #000000 solid;
+    padding: 20px 40px;
+}
+
+.logo{
+    display:inline-block;
+    text-align:right;
+    object-fit: cover;
+    height: 100%;
+}
+
+header h1 {
+    font-size: 5em;
+    font-weight: 300;
+    color: #ffffff;
+    padding-left: 70px;
+}
+
+/*corps de la page*/
+main h1{
+    font-size: 6em;
+    height: auto;
+    font-weight: 600;
+    padding-top: 5%;
+    padding-bottom: 5%;
+
+}
+
+.bouton{
+    font-size: 2em;
+    font-weight: 200;
+    background-color: #FA0B0B;
+    border-radius: 1em;
+    border: currentColor;
+    color : #ffffff;
+    text-align: center;
+    padding: 0.5em;
+}
+
+/*Meilleur film*/
+.best-film{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding:1em;
+    border: 6px #000000 solid;
+    gap:0.5em;
+}
+
+.best-film .image-best{
+    align-content:center;
+    justify-content: center;
+    width: 100%;
+}
+
+.best-film img{
+    width: auto;
+    height: 30em;
+    margin:auto;
+}
+
+.content{
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items:flex-start;
+    width: 100%;
+    gap:1em;
+}
+
+.best-film button{
+    align-self: flex-end;
+    margin-right: 1em;
+    padding:1em 1.5em;
+}
+
+.category1-2-3{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 5em;
+}
+
+.film1-2-3{
+   position: relative;
+}
+
+/*Catégories 1, 2 et 3*/
+.category1-2-3 img{
+    width: 32em;
+    height:32em;
+    overflow: hidden;
+    object-fit: cover;
+}
+
+.bandeau{
+    position: absolute;
+    width: 100%;
+    top:25%;
+    padding-bottom: 0.5em;
+    background-color: rgba(0,0,1,0.2);
+    left:auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1em;
+}
+
+.bandeau h2{
+    font-size: 3em;
+    height: auto;
+    font-weight: 600;
+    color: #ffffff;
+    padding-top: 0.2em;
+    padding-left: 0.5em; 
+    opacity: 1;
+}
+
+.bandeau button{
+    margin-left: 70%;
+    background-color: #2D2C2C;
+    padding-bottom: 0.5em;
+    opacity: 1;
+}
+
+.fond-bandeau{
+    background-color: #000000;
+    position: absolute;
+    width: 100%;
+    top:25%;
+    left:auto;
+    opacity: 0.2;
+}
+
+/*Catégories 4 et 5*/
+select{
+    font-size: 20em;
+}
+
+#choix{
+    border: 0.05em #000000 solid;
+    font-size: 0.8em;
+    font-weight: 600;
+    width: 7.7em;
+    margin-bottom: 0.8em;
+    padding-left: 0.5em;
+    
+}
+
+.pos{
+    display: block;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto; 
+    
+}
+
+@media screen and (min-width: 1025px) {
+    .pos{
+        display: none;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+    .best-film{
+        gap:0em;
+    }
+    .bouton{
+        margin-top: -0.5sem;
+    }
+    .pos{
+        display:block;
+    }
+    .category-autre2{
+        display:none;
+    }
+
+    #cat1-5, #cat1-6{
+        display:none;
+    }
+    
+}
+
+@media screen and (max-width: 767px){
+    .pos{
+        display:block;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
