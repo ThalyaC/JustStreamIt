@@ -6,6 +6,7 @@
 
 body {
     font-family: 'Oswald', sans-serif;
+    font-size:medium;
     padding:2%;
     margin:0.5%;
     border: 1px  #000000 solid;
@@ -181,6 +182,10 @@ select{
     
 }
 
+.suite{
+    visibility:hidden;
+}
+
 .pos{
     display: block;
     margin-top: 5%;
@@ -189,22 +194,20 @@ select{
     
 }
 
-@media screen and (min-width: 1025px) {
-    .pos{
-        display: none;
-    }
-}
 
-@media screen and (min-width: 768px) and (max-width: 1024px) {
+
+
+@media screen and (max-width: 1200px) {
     .best-film{
         gap:0em;
     }
     .bouton{
         margin-top: -0.5sem;
     }
-    .pos{
-        display:block;
+    .suite{
+        visibility:visible;
     }
+
     .category-autre2{
         display:none;
     }
@@ -215,14 +218,14 @@ select{
     
 }
 
-@media screen and (max-width: 767px){
-    .pos{
+@media screen and (max-width: 960px) {
+    .best-film{
         display:block;
     }
-
+    #cat1-3, #cat1-4{
+        display:none;
+    }
 }
-
-
 
 
 
