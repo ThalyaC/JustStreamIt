@@ -19,8 +19,8 @@ a {
 }
 
 p{
-    font-size: 2em;
     font-weight: 200;
+    font-size:2em;
 }
 
 /*En-tête*/
@@ -50,7 +50,7 @@ header h1 {
 
 /*corps de la page*/
 main h1{
-    font-size: 6em;
+    font-size: 600%;
     height: auto;
     font-weight: 600;
     padding-top: 5%;
@@ -59,7 +59,7 @@ main h1{
 }
 
 .bouton{
-    font-size: 2em;
+    font-size: 200%;
     font-weight: 200;
     background-color: #FA0B0B;
     border-radius: 1em;
@@ -76,6 +76,7 @@ main h1{
     justify-content: space-between;
     align-items: center;
     padding:1em;
+    background-color: #ffffff;
     border: 6px #000000 solid;
     gap:0.5em;
 }
@@ -196,8 +197,14 @@ select{
 
 
 
-
+/*1200*/
 @media screen and (max-width: 1200px) {
+    *{
+        margin:0
+    }
+    header h1, main h1{
+        font-size: 3.5em;
+    }
     .best-film{
         gap:0em;
     }
@@ -219,11 +226,43 @@ select{
 }
 
 @media screen and (max-width: 960px) {
+    body{
+        display:block;
+        justify-content: center;
+        align-items: center;
+        padding:-0.5em;
+        
+    }
+    header{
+        background-color: #61787F;
+        padding: 1rem 1rem;
+        justify-content: center;    
+    }
+
+    header .logo{
+        text-align: center;
+    }
+    header h1{
+        display:none;
+        /*font-size:300%;
+        white-space:nowrap;
+        padding-left: 0;*/
+        
+    }
     .best-film{
+        display:inline-block;
+        
+    }
+    .best-film .image-best{
         display:block;
     }
+
     #cat1-3, #cat1-4{
         display:none;
+    }
+
+    img{
+        justify-content: center;
     }
 }
 
