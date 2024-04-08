@@ -202,4 +202,4 @@ let c2F5Bouton = document.querySelector("#cat2-4 button.bouton a");
 let c2F6Bouton = document.querySelector("#cat2-5 button.bouton a");
 //console.log(c2F6Bouton);
 
-//category 3 */
+//category 3 ...*/
