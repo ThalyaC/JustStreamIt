@@ -1,7 +1,8 @@
 /*général*/
 
 * {
-   margin: 0; 
+   margin: 0;
+   padding: 0;
 }
 
 body {
@@ -10,18 +11,118 @@ body {
     padding:2%;
     margin:0.5%;
     border: 1px  #000000 solid;
+    
 
 }
+
+p{
+    font-size: 2em;
+    font-weight: 300;
+ }
+
+/*Modal*/
+.modal {
+    display: none; /* Hidden by default */
+    position:fixed; /* Stay in place */
+    z-index: 1;  /*Sit on top */
+    padding-top: 0.5em; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    overflow: auto; /* Enable scroll if needed */
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    width: 80%;
+    height: 80%;
+    font-family: 'Oswald', sans-serif;
+    border: 6px  #000000 solid;
+  }
+  
+ .modal-content h1{
+    font-size: 6em;
+    font-weight: 600;
+ }
+
+ .modal-content h2{
+    font-size: 2em;
+    font-weight: 600;
+ }
+
+ .modal-content h3{
+    margin-top: 5%;
+    font-size: 2em;
+    font-weight: 400;
+ }
+
+ 
+
+ .modal-content section{
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content:space-between;
+    
+ }
+
+.modal-content .image-resp1{
+    display: block;
+    padding:0;
+    margin:0;
+    justify-content: right;
+    max-width: 20em;
+    height: auto;
+}
+
+.modal-content .resume{
+    margin-top: 5%;
+}
+
+
+.modal-content .pos{
+    display: block;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto; 
+}
+
+.modal-content .croix{
+    font-size: 4.5em;
+    font-weight: 500;
+    color: #FA0B0B;
+    text-shadow: #000000 1px 1px, #000000 -1px 1px, #000000 -1px -1px, #000000 1px -1px;
+    text-align:end;
+    margin-bottom: -0.2em;
+
+}
+  /* The Close Button */
+  .close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+  }
 
 a {
     color: #ffffff;
     text-decoration: none;
 }
 
-p{
-    font-weight: 200;
-    font-size:2em;
-}
 
 /*En-tête*/
 header{
@@ -79,6 +180,7 @@ main h1{
     background-color: #ffffff;
     border: 6px #000000 solid;
     gap:0.5em;
+    position:relative;
 }
 
 .best-film .image-best{
@@ -195,13 +297,20 @@ select{
     
 }
 
+/*>1025px*/
+@media screen and (min-width: 1025px) {
 
-
-/*1200*/
-@media screen and (max-width: 1200px) {
-    *{
-        margin:0
+    .modal-content .croix, .modal-content .image-resp2{
+        display: none;
     }
+}
+
+
+@media screen and (max-width: 1200px) {
+    * {
+        margin: 0;
+        padding: 0;
+     }
     header h1, main h1{
         font-size: 3.5em;
     }
@@ -222,24 +331,56 @@ select{
     #cat1-4, #cat1-5{
         display:none;
     }
+
+    .film1-2-3{
+        width:100%;
+        height: auto;
+
+    }
+}
+
+/*Pour la popup*/
+@media screen and (max-width: 1024px) {
+    .modal-content h1{
+        font-size:3.5em;
+    }
+    .box{
+        display:block;
+    }
+    .image-resp1, .modal-content button{
+        display:none;
+    }
+    .modal-content .croix, .modal-content .image-resp2{
+        display: inline-block;
+    }
     
 }
 
 @media screen and (max-width: 960px) {
+    * {
+        margin: 0;
+        padding: 0;
+     }
     body{
-        display:block;
+        display: block;
         justify-content: center;
         align-items: center;
-        padding:-0.5em;
+        padding: 0;
+        margin:0;
+        border:none;
+        
         
     }
     header{
+        width:100%;
+        height: auto;
         background-color: #61787F;
-        padding: 1rem 1rem;
         justify-content: center;    
     }
 
     header .logo{
+        width:100%;
+        height: auto;
         text-align: center;
     }
     header h1{
@@ -251,19 +392,30 @@ select{
     }
     .best-film{
         display:inline-block;
+        margin: auto;
+        padding: auto;
+        width:100%;
+        height: auto;
         
     }
     .best-film .image-best{
         display:block;
+        justify-content: center;
+
+    }
+
+    .film1-2-3, .best-film, .bandeau{
+        margin: 0;
+        padding: 0;
+        width:100%;
+        height: auto;
+
     }
 
     #cat1-3, #cat1-4{
         display:none;
     }
 
-    img{
-        justify-content: center;
-    }
 }
 
 
