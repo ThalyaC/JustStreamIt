@@ -63,7 +63,6 @@ async function fetchClassementGenreSuit(apiEndpointGenreSuit){
   /*for(let k=0; k<j; k++){*/
   dataGenreTotalSuit.results[0];
     //dataListGenre.push(dataFilmGenreSuit);
-  
 }
 
 async function fetchClassementGenre(genre, cat){
@@ -99,12 +98,15 @@ async function fetchClassementGenre(genre, cat){
 function displayFilm(nombreFilms, dataList,cat){
   if (nombreFilms !== dataList.length){
     let nbreFilmsmanquants = nombreFilms-dataList.length;
-    let j=dataList.length-1;
+    console.log(nbreFilmsmanquants);
+    let j=nbreFilmsmanquants-2;
     console.log(j);
-    while (j < nbreFilmsmanquants){
-      let idResearch = "#cat"+cat+"-"+j;
+    while (j < nombreFilms){
+      console.log(j);
+      let idResearch = "cat"+cat+"-"+j;
+      console.log(idResearch);
       let divMask = document.getElementById(idResearch);
-      divMask.style.display = 'none';
+      divMask.remove();
       j++;
     }
   }
