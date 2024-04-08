@@ -71,48 +71,62 @@ async function fetchClassementGenre(genre, cat){
   let responseGenre = await fetch(apiEndpointGenre);
   let dataGenreTotal = await responseGenre.json();
   let dataGenreNbre = (dataGenreTotal.results).length;
+  const nombreFilms = 6;
+  
   let dataListGenre = [];
-  let nombreFilms = 6;
-
-  if(dataGenreNbre = 5){
-    for(let i=0; i<nombreFilms; i++){
-      let dataFilmGenre = dataGenreTotal.results[i];
-      dataListGenre.push(dataFilmGenre);
-      let apiEndpointGenreSuit = dataGenreTotal.next;
-      let responseGenreSuit = await fetch(apiEndpointGenreSuit);
-      let dataGenreTotalSuit = await responseGenreSuit.json();    
-      let dataFilmGenreSuit = dataGenreTotalSuit.results[0];
-      dataListGenre.push(dataFilmGenreSuit);
-      }
-    displayFilm(nombreFilms, dataListGenre, cat);
-  }
+  //let nombreFilms = 6;
   if (dataGenreNbre < 5){
-    for(let i=0; i<dataGenreNbre; i++){
+      for(let i=0; i<dataGenreNbre; i++){
+        let dataFilmGenre = dataGenreTotal.results[i];
+        dataListGenre.push(dataFilmGenre);
+      }
+      displayFilm(dataGenreNbre, dataListGenre, cat);
+    }
+  else {
+    for(let i=0; i<5; i++){
       let dataFilmGenre = dataGenreTotal.results[i];
       dataListGenre.push(dataFilmGenre);
     }
-    displayFilm(dataGenreNbre, dataListGenre, cat);
-  }
+    let apiEndpointGenreSuit = dataGenreTotal.next;
+    let responseGenreSuit = await fetch(apiEndpointGenreSuit);
+    let dataGenreTotalSuit = await responseGenreSuit.json();    
+    let dataFilmGenreSuit = dataGenreTotalSuit.results[0];
+    dataListGenre.push(dataFilmGenreSuit);
+    }
+  displayFilm(nombreFilms, dataListGenre, cat);
 }
 
 function displayFilm(nombreFilms, dataList,cat){
-  let i=0;
-  while (i < nombreFilms) {
-    //console.log(i);
-    let emplacementDomTitre = "#cat"+cat+"-"+i+" .bandeau h2";
-    //console.log(emplacementDomTitre);
-    let emplacementDomImag = "#cat"+cat+"-"+i+ " img";
-    let film = dataList[i];
-    let elementTitreFilm = film.title;
-    //console.log(elementTitreFilm);
-    let titreFilm = document.querySelector(emplacementDomTitre);
-    //console.log(titreFilm);
-    titreFilm.textContent = elementTitreFilm;
-    let elementImagFilm = film.image_url;
-    let imagFilm = document.querySelector(emplacementDomImag);
-    imagFilm.src = elementImagFilm;
-    imagFilm.alt = titreFilm.textContent;
-    i++
+  if (nombreFilms !== dataList.length){
+    let nbreFilmsmanquants = nombreFilms-dataList.length;
+    let j=dataList.length-1;
+    console.log(j);
+    while (j < nbreFilmsmanquants){
+      let idResearch = "#cat"+cat+"-"+j;
+      let divMask = document.getElementById(idResearch);
+      divMask.style.display = 'none';
+      j++;
+    }
+  }
+  else{
+    let i=0;
+    while (i < nombreFilms) {
+      //console.log(i);
+      let emplacementDomTitre = "#cat"+cat+"-"+i+" .bandeau h2";
+      //console.log(emplacementDomTitre);
+      let emplacementDomImag = "#cat"+cat+"-"+i+ " img";
+      let film = dataList[i];
+      let elementTitreFilm = film.title;
+      //console.log(elementTitreFilm);
+      let titreFilm = document.querySelector(emplacementDomTitre);
+      //console.log(titreFilm);
+      titreFilm.textContent = elementTitreFilm;
+      let elementImagFilm = film.image_url;
+      let imagFilm = document.querySelector(emplacementDomImag);
+      imagFilm.src = elementImagFilm;
+      imagFilm.alt = titreFilm.textContent;
+      i++;
+    }
   }
 }
 
