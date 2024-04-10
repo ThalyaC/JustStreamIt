@@ -43,26 +43,42 @@ async function dataApi(filters){
   return dataClassement;
 }
 
+async function element(dataIdFilm){
+  // Récupération des données de l'API
+  let dataFilm = await dataApi(dataIdFilm);
+  
+  let elementImagFilm = dataFilm.image_url;
+  let elementTitreFilm = dataFilm.title;
+  let elementResumFilm = dataFilm.description;
+  let elementYearFilm = dataFilm.year;
+  let elementGenresFilm = dataFilm.genres;
+  let elementRatedFilm = dataFilm.rated;
+  let elementDurationFilm = dataFilm.duration;
+  let elementCountriesFilm = dataFilm.countries;
+  let elementImdbFilm = dataFilm.imdb_score;
+  let elementDirectorsFilm = dataFilm.directors;
+  let elementActorsFilm = dataFilm.actors;
+  return [elementImagFilm, elementTitreFilm, elementResumFilm, elementYearFilm, elementGenresFilm, elementRatedFilm, elementDurationFilm, elementCountriesFilm, elementImdbFilm, elementDirectorsFilm, elementActorsFilm]
 
-// Best Film
+}
+
 async function fetchClassementGeneral(){
+  // Best Film
   const dataClassement = await dataApi("?sort_by=-imdb_score");
   const dataClassBestFilm = dataClassement.results[0];
   // Consultation de la page du film
   let dataIdBestFilm = dataClassBestFilm.id;
-  let dataBestFilm = await dataApi(dataIdBestFilm);
-  
-  let elementImagBestFilm = dataBestFilm.image_url;
-  let elementTitreBestFilm = dataBestFilm.title;
-  let elementResumBestFilm = dataBestFilm.description;
-
+  // Récupération des données
+  let [elementImagFilm, elementTitreFilm, elementResumFilm, elementYearFilm, elementGenresFilm, elementRatedFilm, elementDurationFilm, elementCountriesFilm, elementImdbFilm, elementDirectorsFilm, elementActorsFilm] = await element(dataIdBestFilm);
+  // Interpolation
+  // 1) Création du code. ` = s'appelle backtiks
   let div = `
     <div class="image-best">
-      <img src="${elementImagBestFilm}", alt="${elementTitreBestFilm}">
+      <img src="${elementImagFilm}", alt="${elementTitreFilm}">
     </div>
     <div class="content">
-      <h1>${elementTitreBestFilm}</h1>
-      <p>${elementResumBestFilm}</p>
+      <h1>${elementTitreFilm}</h1>
+      <p>${elementResumFilm}</p>
       <!-- Trigger/Open The Modal -->
       <button class="bouton">Détails</button>
         
@@ -76,41 +92,27 @@ async function fetchClassementGeneral(){
           <section class="box">
 
             <div>
-              <h1 id="titre">The Big Lebowski</h1>
-              <h2><span id="sortie">1998</span> - <span id="genre">Comedy, Crime, Sport</span><br>
-              <span id="rated">PG-13</span> - <span id="duree">117 minutes</span><span id="paysOrigine"> (USA / UK)</span><br>
-              <span id="scoreImdb">IMDB score: 8.1/10</span></h2><br>
+              <h1 id="titre">${elementTitreFilm}</h1>
+              <h2><span id="sortie">${elementYearFilm}</span> - <span id="genre">${elementGenresFilm}</span><br>
+              <span id="rated">${elementRatedFilm}</span> - <span id="duree">${elementDurationFilm} minutes</span><span id="paysOrigine"> (${elementCountriesFilm})</span><br>
+              <span id="scoreImdb">IMDB score: ${elementImdbFilm}/10</span></h2><br>
               <h3>Réalisé par:</h3>
-              <p id="realisateur">Joel Cohen, Ethan Cohen</p>
+              <p id="realisateur">${elementDirectorsFilm}</p>
             </div>
-            <img class="image-resp1" src="images/biglebo.png", alt="Affiche de The big Lebowski">
+            <img class="image-resp1" src="${elementImagFilm}", alt="${elementTitreFilm}">
           </section>
                 
-          <p class="resume">When "the dude" Lebowski is mistaken for a millionaire Lebowski, two thugs urinate on his rug to coerce him into paying a debt he knows nothing about. While attempting to gain recompense for the ruined rug from his wealthy counterpart, he accepts a one-time job with high pay-off. He enlists the help of his bowling buddy, Walter, a gun-toting Jewish-convert with anger issues. Deception leads to more trouble, and it soon seems that everyone from porn empire tycoons to nihilists want something from The Dude.</p>
-          <img class="image-resp2" src="images/biglebo.png", alt="Affiche de The big Lebowski">
+          <p class="resume">${elementResumFilm}</p>
+          <img class="image-resp2" src="${elementImagFilm}", alt="${elementTitreFilm}">
           <h3>Avec :</h3>
-          <p class="acteurs">David Huddleston, Flea, Jack Kehler, Jeff Bridges, Jimmie Dale Gilmore, John Goodman, John Turturro, Julianne Moore, Mark Pellegrino, Peter Stormare, Philip Moon, Philip Seymour Hoffman, Steve Buscemi, Tara Reid, Torsten Voges</p>
+          <p class="acteurs">${elementActorsFilm}</p>
           <button class="bouton pos">Fermer</button>
         </div>
       </div>
     </div>
     `;
-  let body = document.querySelector(".best-film");
-  body.innerHTML = div; 
-/* 
-  //titre
-  let elementTitreBestFilm = dataBestFilm.title;
-  let bestFilmTitre = document.querySelector(".content h1");
-  bestFilmTitre.textContent = elementTitreBestFilm;
-  //Description
-  let elementResumBestFilm = dataBestFilm.description;
-  let bestFilmResum = document.querySelector(".content p");
-  bestFilmResum.textContent = elementResumBestFilm;
-  // Image
-  let elementImagBestFilm = dataBestFilm.image_url;
-  let bestFilmImage = document.querySelector(".image-best img");
-  bestFilmImage.src = elementImagBestFilm;
-  bestFilmImage.alt = bestFilmTitre.textContent;*/
+  let bestFilm = document.querySelector(".best-film");
+  bestFilm.innerHTML = div; 
   let bestFilmBouton = document.querySelector(".content button.bouton");
   popup(bestFilmBouton);
 }

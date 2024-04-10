@@ -347,7 +347,7 @@ select{
     .box{
         display:block;
     }
-    .image-resp1, .modal-content button{
+    .modal-content .image-resp1, .modal-content button{
         display:none;
     }
     .modal-content .croix, .modal-content .image-resp2{
