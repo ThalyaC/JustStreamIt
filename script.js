@@ -14,17 +14,26 @@ function popup(btn){
   // Get the button that opens the modal   var btn = document.querySelector("bouton");
 
   // Get the <span> element that closes the modal
-  var span = document.querySelector("bouton pos");
+  var croix = document.querySelector(".croix");
+  
+  // When the user clicks on <span> (x), close the modal
+  croix.onclick = function() {
+    modal.style.display = "none";
+  }
+
+  var close = document.querySelector(".close");
+  
+  // When the user clicks on <span> (x), close the modal
+  close.onclick = function() {
+    modal.style.display = "none";
+  }
 
   // When the user clicks the button, open the modal 
   btn.onclick = function() {
     modal.style.display = "block";
   }
 
-  // When the user clicks on <span> (x), close the modal
-  span.onclick = function() {
-    modal.style.display = "none";
-  }
+  
 
   // When the user clicks anywhere outside of the modal, close it
   window.onclick = function(event) {
@@ -58,63 +67,78 @@ async function element(dataIdFilm){
   let elementImdbFilm = dataFilm.imdb_score;
   let elementDirectorsFilm = dataFilm.directors;
   let elementActorsFilm = dataFilm.actors;
-  return [elementImagFilm, elementTitreFilm, elementResumFilm, elementYearFilm, elementGenresFilm, elementRatedFilm, elementDurationFilm, elementCountriesFilm, elementImdbFilm, elementDirectorsFilm, elementActorsFilm]
 
+  return [elementImagFilm, elementTitreFilm, elementResumFilm, elementYearFilm, elementGenresFilm, elementRatedFilm, elementDurationFilm, elementCountriesFilm, elementImdbFilm, elementDirectorsFilm, elementActorsFilm]
+}
+
+function contentPopup(elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors){
+  //Création du contenu de la popup
+  let divPopup = `
+      <!-- Modal content -->
+                
+      <div class="modal-content">
+        <div class="croix">x</div>
+        <section class="box">
+
+          <div>
+            <h1 id="titre">${elementTitre}</h1>
+            <h2><span id="sortie">${elementYear}</span> - <span id="genre">${elementGenres}</span><br>
+            <span id="rated">${elementRated}</span> - <span id="duree">${elementDuration} minutes</span><span id="paysOrigine"> (${elementCountries})</span><br>
+            <span id="scoreImdb">IMDB score: ${elementImdb}/10</span></h2><br>
+            <h3>Réalisé par:</h3>
+            <p id="realisateur">${elementDirectors}</p>
+          </div>
+          <img class="image-resp1" src="${elementImag}", alt="${elementTitre}">
+        </section>
+              
+        <p class="resume">${elementResum}</p>
+        <img class="image-resp2" src="${elementImag}", alt="${elementTitre}">
+        <h3>Avec :</h3>
+        <p class="acteurs">${elementActors}</p>
+        <button class="bouton pos close">Fermer</button>
+      </div>
+    </div>
+    `
+    return(divPopup)
 }
 
 async function fetchClassementGeneral(){
   // Best Film
   const dataClassement = await dataApi("?sort_by=-imdb_score");
   const dataClassBestFilm = dataClassement.results[0];
+
   // Consultation de la page du film
   let dataIdBestFilm = dataClassBestFilm.id;
+
   // Récupération des données
-  let [elementImagFilm, elementTitreFilm, elementResumFilm, elementYearFilm, elementGenresFilm, elementRatedFilm, elementDurationFilm, elementCountriesFilm, elementImdbFilm, elementDirectorsFilm, elementActorsFilm] = await element(dataIdBestFilm);
+  let [elementImag, elementTitre, elementResum, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementActors] = await element(dataIdBestFilm);
+  
   // Interpolation
   // 1) Création du code. ` = s'appelle backtiks
   let div = `
     <div class="image-best">
-      <img src="${elementImagFilm}", alt="${elementTitreFilm}">
+      <img src="${elementImag}", alt="${elementTitre}">
     </div>
     <div class="content">
-      <h1>${elementTitreFilm}</h1>
-      <p>${elementResumFilm}</p>
-      <!-- Trigger/Open The Modal -->
-      <button class="bouton">Détails</button>
+      <h1>${elementTitre}</h1>
+      <p>${elementResum}</p>
+      <!-- Trigger/Open The Modal (trigger = déclenchement)-->
+      <button class="bouton" id="details">Détails</button>
         
       <!-- The Modal -->
       <div id="myModal" class="modal">
-
-        <!-- Modal content -->
-            
-        <div class="modal-content">
-          <div class="croix">x</div>
-          <section class="box">
-
-            <div>
-              <h1 id="titre">${elementTitreFilm}</h1>
-              <h2><span id="sortie">${elementYearFilm}</span> - <span id="genre">${elementGenresFilm}</span><br>
-              <span id="rated">${elementRatedFilm}</span> - <span id="duree">${elementDurationFilm} minutes</span><span id="paysOrigine"> (${elementCountriesFilm})</span><br>
-              <span id="scoreImdb">IMDB score: ${elementImdbFilm}/10</span></h2><br>
-              <h3>Réalisé par:</h3>
-              <p id="realisateur">${elementDirectorsFilm}</p>
-            </div>
-            <img class="image-resp1" src="${elementImagFilm}", alt="${elementTitreFilm}">
-          </section>
-                
-          <p class="resume">${elementResumFilm}</p>
-          <img class="image-resp2" src="${elementImagFilm}", alt="${elementTitreFilm}">
-          <h3>Avec :</h3>
-          <p class="acteurs">${elementActorsFilm}</p>
-          <button class="bouton pos">Fermer</button>
-        </div>
-      </div>
-    </div>
     `;
+  // 2) Insertion du code dans la page html
+  let popUp = contentPopup(elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors);
+  let html = div + popUp
   let bestFilm = document.querySelector(".best-film");
-  bestFilm.innerHTML = div; 
-  let bestFilmBouton = document.querySelector(".content button.bouton");
-  popup(bestFilmBouton);
+  bestFilm.innerHTML = html;
+  
+
+
+  // Pour ouvrir la popup
+  let FilmBouton = document.querySelector(".content button.bouton");
+  popup(FilmBouton);
 }
 
 async function fetchClassementGenreSuit(apiEndpointGenreSuit){
