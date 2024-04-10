@@ -1,4 +1,11 @@
 /* Pour démarrer le serveur, lancer l'environnement virtuel puis python manage.py runserver */
+/*
+function menuDeroulant(){
+  const menuGenre = document.getElementById('choix1');
+  const indexSelect = menuGenre.value;
+  prompt='index sélectionné:'+ indexSelect;
+}
+*/
 
 // Get the modal
 function popup(btn){
@@ -28,18 +35,69 @@ function popup(btn){
 }
 
 //fonctions
+async function dataApi(filters){
+  // requête sur l'API pour trouver le ou les films le(s) mieux classé(s)
+  const apiEndpointClassement = "http://localhost:8000/api/v1/titles/"+filters;
+  const responseClassement = await fetch(apiEndpointClassement);
+  const dataClassement = await responseClassement.json();
+  return dataClassement;
+}
+
 
 // Best Film
 async function fetchClassementGeneral(){
-  // requête sur l'API pour trouver le film le mieux classé
-  const apiEndpointClassement = "http://localhost:8000/api/v1/titles/?sort_by=-imdb_score";
-  const responseClassement = await fetch(apiEndpointClassement);
-  const dataClassement = await responseClassement.json();
+  const dataClassement = await dataApi("?sort_by=-imdb_score");
   const dataClassBestFilm = dataClassement.results[0];
   // Consultation de la page du film
-  let dataAdressBestFilm = dataClassBestFilm.url;
-  let responseBestFilm = await fetch(dataAdressBestFilm);
-  let dataBestFilm = await responseBestFilm.json();
+  let dataIdBestFilm = dataClassBestFilm.id;
+  let dataBestFilm = await dataApi(dataIdBestFilm);
+  
+  let elementImagBestFilm = dataBestFilm.image_url;
+  let elementTitreBestFilm = dataBestFilm.title;
+  let elementResumBestFilm = dataBestFilm.description;
+
+  let div = `
+    <div class="image-best">
+      <img src="${elementImagBestFilm}", alt="${elementTitreBestFilm}">
+    </div>
+    <div class="content">
+      <h1>${elementTitreBestFilm}</h1>
+      <p>${elementResumBestFilm}</p>
+      <!-- Trigger/Open The Modal -->
+      <button class="bouton">Détails</button>
+        
+      <!-- The Modal -->
+      <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+            
+        <div class="modal-content">
+          <div class="croix">x</div>
+          <section class="box">
+
+            <div>
+              <h1 id="titre">The Big Lebowski</h1>
+              <h2><span id="sortie">1998</span> - <span id="genre">Comedy, Crime, Sport</span><br>
+              <span id="rated">PG-13</span> - <span id="duree">117 minutes</span><span id="paysOrigine"> (USA / UK)</span><br>
+              <span id="scoreImdb">IMDB score: 8.1/10</span></h2><br>
+              <h3>Réalisé par:</h3>
+              <p id="realisateur">Joel Cohen, Ethan Cohen</p>
+            </div>
+            <img class="image-resp1" src="images/biglebo.png", alt="Affiche de The big Lebowski">
+          </section>
+                
+          <p class="resume">When "the dude" Lebowski is mistaken for a millionaire Lebowski, two thugs urinate on his rug to coerce him into paying a debt he knows nothing about. While attempting to gain recompense for the ruined rug from his wealthy counterpart, he accepts a one-time job with high pay-off. He enlists the help of his bowling buddy, Walter, a gun-toting Jewish-convert with anger issues. Deception leads to more trouble, and it soon seems that everyone from porn empire tycoons to nihilists want something from The Dude.</p>
+          <img class="image-resp2" src="images/biglebo.png", alt="Affiche de The big Lebowski">
+          <h3>Avec :</h3>
+          <p class="acteurs">David Huddleston, Flea, Jack Kehler, Jeff Bridges, Jimmie Dale Gilmore, John Goodman, John Turturro, Julianne Moore, Mark Pellegrino, Peter Stormare, Philip Moon, Philip Seymour Hoffman, Steve Buscemi, Tara Reid, Torsten Voges</p>
+          <button class="bouton pos">Fermer</button>
+        </div>
+      </div>
+    </div>
+    `;
+  let body = document.querySelector(".best-film");
+  body.innerHTML = div; 
+/* 
   //titre
   let elementTitreBestFilm = dataBestFilm.title;
   let bestFilmTitre = document.querySelector(".content h1");
@@ -52,7 +110,7 @@ async function fetchClassementGeneral(){
   let elementImagBestFilm = dataBestFilm.image_url;
   let bestFilmImage = document.querySelector(".image-best img");
   bestFilmImage.src = elementImagBestFilm;
-  bestFilmImage.alt = bestFilmTitre.textContent;
+  bestFilmImage.alt = bestFilmTitre.textContent;*/
   let bestFilmBouton = document.querySelector(".content button.bouton");
   popup(bestFilmBouton);
 }
@@ -60,9 +118,7 @@ async function fetchClassementGeneral(){
 async function fetchClassementGenreSuit(apiEndpointGenreSuit){
   let responseGenreSuit = await fetch(apiEndpointGenreSuit);
   let dataGenreTotalSuit = await responseGenreSuit.json();  
-  /*for(let k=0; k<j; k++){*/
   dataGenreTotalSuit.results[0];
-    //dataListGenre.push(dataFilmGenreSuit);
 }
 
 async function fetchClassementGenre(genre, cat){
@@ -132,6 +188,14 @@ function displayFilm(nombreFilms, dataList,cat){
   }
 }
 
+
+
+function creaCatAutre(){
+  let newSection = document.createElement("section");
+  let parentNewSection = document.querySelector("category-autre1");
+  parentNewSection.appendChild(newSection);
+}
+
 // _________
 
 //BEST FILM
@@ -145,6 +209,17 @@ fetchClassementGeneral();
 fetchClassementGenre("Mystery", 1);
 fetchClassementGenre("Fantasy", 2);
 fetchClassementGenre("Sci-Fi", 3);
+function genre(){
+  let menuGenre = document.getElementById("choix1");
+  menuGenre.addEventListener("change", (event) =>{
+    fetchClassementGenre(event.target.value, 4);
+    creaCatAutre();
+
+  })
+}
+genre();
+
+
 
 /*
 let c1F1Bouton = document.querySelector("#cat1-0 button.bouton a");
