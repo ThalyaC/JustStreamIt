@@ -9,7 +9,7 @@ function menuDeroulant(){
 
 // Get the modal
 function popup(btn){
-  var modal = document.getElementById("myModal");
+  var modal = document.getElementById("myModal"+i);
 
   // Get the button that opens the modal   var btn = document.querySelector("bouton");
 
@@ -81,12 +81,12 @@ function contentPopup(elementTitre, elementYear, elementGenres, elementRated, el
         <section class="box">
 
           <div>
-            <h1 id="titre">${elementTitre}</h1>
-            <h2><span id="sortie">${elementYear}</span> - <span id="genre">${elementGenres}</span><br>
-            <span id="rated">${elementRated}</span> - <span id="duree">${elementDuration} minutes</span><span id="paysOrigine"> (${elementCountries})</span><br>
-            <span id="scoreImdb">IMDB score: ${elementImdb}/10</span></h2><br>
+            <h1>${elementTitre}</h1>
+            <h2><span>${elementYear}</span> - <span>${elementGenres}</span><br>
+            <span>${elementRated}</span> - <span>${elementDuration} minutes</span><span> (${elementCountries})</span><br>
+            <span>IMDB score: ${elementImdb}/10</span></h2><br>
             <h3>Réalisé par:</h3>
-            <p id="realisateur">${elementDirectors}</p>
+            <p>${elementDirectors}</p>
           </div>
           <img class="image-resp1" src="${elementImag}", alt="${elementTitre}">
         </section>
@@ -126,11 +126,11 @@ async function fetchClassementGeneral(){
       <button class="bouton" id="details">Détails</button>
         
       <!-- The Modal -->
-      <div id="myModal" class="modal">
+      <div id="myModal00" class="modal">
     `;
   // 2) Insertion du code dans la page html
   let popUp = contentPopup(elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors);
-  let html = div + popUp
+  let html = div + popUp;
   let bestFilm = document.querySelector(".best-film");
   bestFilm.innerHTML = html;
   
@@ -148,31 +148,47 @@ async function fetchClassementGenreSuit(apiEndpointGenreSuit){
 }
 
 async function fetchClassementGenre(genre, cat){
-  let apiEndpointGenre = "http://localhost:8000/api/v1/titles/?genre="+genre+"&sort_by=-imdb_score";
-  let responseGenre = await fetch(apiEndpointGenre);
-  let dataGenreTotal = await responseGenre.json();
+  let filters = "?genre="+genre+"&sort_by=-imdb_score";
+  let dataGenreTotal = await dataApi(filters);
   let dataGenreNbre = (dataGenreTotal.results).length;
   const nombreFilms = 6;
   
   let dataListGenre = [];
-  //let nombreFilms = 6;
   if (dataGenreNbre < 5){
       for(let i=0; i<dataGenreNbre; i++){
         let dataFilmGenre = dataGenreTotal.results[i];
-        dataListGenre.push(dataFilmGenre);
+        //essai
+        let dataFilmGenreId = dataFilmGenre.id;
+        //let filmdetail = await dataApi(dataFilmGenreId);
+        let filmdetail = await element(dataFilmGenreId);
+        //dataListGenre.push(dataFilmGenre);
+        dataListGenre.push(filmdetail);
       }
       displayFilm(dataGenreNbre, dataListGenre, cat);
     }
   else {
     for(let i=0; i<5; i++){
       let dataFilmGenre = dataGenreTotal.results[i];
-      dataListGenre.push(dataFilmGenre);
+      //dataListGenre.push(dataFilmGenre);
+      //essai
+      let dataFilmGenreId = dataFilmGenre.id;
+      //let filmdetail = await dataApi(dataFilmGenreId);
+      let filmdetail = await element(dataFilmGenreId);
+      dataListGenre.push(filmdetail);
     }
-    let apiEndpointGenreSuit = dataGenreTotal.next;
-    let responseGenreSuit = await fetch(apiEndpointGenreSuit);
-    let dataGenreTotalSuit = await responseGenreSuit.json();    
+    //let apiEndpointGenreSuit = dataGenreTotal.next;
+    let filtersPage2 = "?genre="+genre+"&page=2&sort_by=-imdb_score";
+    //let responseGenreSuit = await fetch(apiEndpointGenreSuit);
+    //let dataGenreTotalSuit = await responseGenreSuit.json();
+    let dataGenreTotalSuit = await dataApi(filtersPage2);    
     let dataFilmGenreSuit = dataGenreTotalSuit.results[0];
-    dataListGenre.push(dataFilmGenreSuit);
+    //essai
+    let dataFilmGenreSuitId = dataFilmGenreSuit.id;
+    //let filmdetailSuit = await dataApi(dataFilmGenreSuitId);
+    let filmdetailSuit = await element(dataFilmGenreSuitId);
+    //dataListGenre.push(dataFilmGenre);
+    dataListGenre.push(filmdetailSuit);
+    //dataListGenre.push(dataFilmGenreSuit);
     }
   displayFilm(nombreFilms, dataListGenre, cat);
 }
@@ -199,16 +215,26 @@ function displayFilm(nombreFilms, dataList,cat){
       let emplacementDomTitre = "#cat"+cat+"-"+i+" .bandeau h2";
       //console.log(emplacementDomTitre);
       let emplacementDomImag = "#cat"+cat+"-"+i+ " img";
-      let film = dataList[i];
-      let elementTitreFilm = film.title;
+      //let film = dataList[i];
+      let [elementImag, elementTitre, elementResum, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementActors] = dataList[i];
+      //let elementTitreFilm = film.title;
       //console.log(elementTitreFilm);
       let titreFilm = document.querySelector(emplacementDomTitre);
       //console.log(titreFilm);
-      titreFilm.textContent = elementTitreFilm;
-      let elementImagFilm = film.image_url;
+      titreFilm.textContent = elementTitre;
+      //let elementImagFilm = film.image_url;
       let imagFilm = document.querySelector(emplacementDomImag);
-      imagFilm.src = elementImagFilm;
+      imagFilm.src = elementImag;
       imagFilm.alt = titreFilm.textContent;
+      
+      let catbutton = "#cat"+cat+"-"+i+" button.bouton"
+      let anchorButton = document.querySelector(catbutton);
+      let insertModalPart1 = `<div class="myModal-modal">`
+      let popUp = contentPopup(elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors);
+      let insertModal = insertModalPart1 + popUp + `</div>`;
+      anchorButton.insertAdjacentHTML("afterend", insertModal);
+      
+      //console.log(c1F1Bouton);
       i++;
     }
   }
