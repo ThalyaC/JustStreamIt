@@ -8,20 +8,21 @@ function menuDeroulant(){
 */
 
 // Get the modal
-function popup(btn){
-  var modal = document.getElementById("myModal"+i);
+function popup(btn, modal, croix, close){
+  //var modal = document.querySelector(`#${myModalUnique}`);
+  //var modal = document.getElementById(myModalUnique);
 
-  // Get the button that opens the modal   var btn = document.querySelector("bouton");
+  //var btn = document.querySelector("bouton");
 
   // Get the <span> element that closes the modal
-  var croix = document.querySelector(".croix");
+  //var croix = document.querySelector(".croix");
   
   // When the user clicks on <span> (x), close the modal
   croix.onclick = function() {
     modal.style.display = "none";
   }
 
-  var close = document.querySelector(".close");
+  //var close = document.querySelector(".close");
   
   // When the user clicks on <span> (x), close the modal
   close.onclick = function() {
@@ -43,6 +44,7 @@ function popup(btn){
   }
 }
 
+
 //fonctions
 async function dataApi(filters){
   // requête sur l'API pour trouver le ou les films le(s) mieux classé(s)
@@ -55,7 +57,7 @@ async function dataApi(filters){
 async function element(dataIdFilm){
   // Récupération des données de l'API
   let dataFilm = await dataApi(dataIdFilm);
-  
+  let elementIdFilm = dataFilm.id;
   let elementImagFilm = dataFilm.image_url;
   let elementTitreFilm = dataFilm.title;
   let elementResumFilm = dataFilm.description;
@@ -68,16 +70,16 @@ async function element(dataIdFilm){
   let elementDirectorsFilm = dataFilm.directors;
   let elementActorsFilm = dataFilm.actors;
 
-  return [elementImagFilm, elementTitreFilm, elementResumFilm, elementYearFilm, elementGenresFilm, elementRatedFilm, elementDurationFilm, elementCountriesFilm, elementImdbFilm, elementDirectorsFilm, elementActorsFilm]
+  return [elementIdFilm, elementImagFilm, elementTitreFilm, elementResumFilm, elementYearFilm, elementGenresFilm, elementRatedFilm, elementDurationFilm, elementCountriesFilm, elementImdbFilm, elementDirectorsFilm, elementActorsFilm]
 }
 
-function contentPopup(elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors){
+function contentPopup(elementIdFilm, elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors){
   //Création du contenu de la popup
   let divPopup = `
       <!-- Modal content -->
                 
-      <div class="modal-content">
-        <div class="croix">x</div>
+      <div class="modal-content" id="content${elementIdFilm}">
+        <div class="croix" id="croix${elementIdFilm}">x</div>
         <section class="box">
 
           <div>
@@ -95,7 +97,7 @@ function contentPopup(elementTitre, elementYear, elementGenres, elementRated, el
         <img class="image-resp2" src="${elementImag}", alt="${elementTitre}">
         <h3>Avec :</h3>
         <p class="acteurs">${elementActors}</p>
-        <button class="bouton pos close">Fermer</button>
+        <button class="bouton pos close" id="close${elementIdFilm}">Fermer</button>
       </div>
     </div>
     `
@@ -111,7 +113,7 @@ async function fetchClassementGeneral(){
   let dataIdBestFilm = dataClassBestFilm.id;
 
   // Récupération des données
-  let [elementImag, elementTitre, elementResum, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementActors] = await element(dataIdBestFilm);
+  let [elementId, elementImag, elementTitre, elementResum, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementActors] = await element(dataIdBestFilm);
   
   // Interpolation
   // 1) Création du code. ` = s'appelle backtiks
@@ -123,22 +125,29 @@ async function fetchClassementGeneral(){
       <h1>${elementTitre}</h1>
       <p>${elementResum}</p>
       <!-- Trigger/Open The Modal (trigger = déclenchement)-->
-      <button class="bouton" id="details">Détails</button>
+      <button class="bouton" id="btn-open${elementId}">Détails</button>
         
       <!-- The Modal -->
-      <div id="myModal00" class="modal">
+      <div id="myModal${elementId}" class="modal">
     `;
   // 2) Insertion du code dans la page html
-  let popUp = contentPopup(elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors);
+  let popUp = contentPopup(elementId, elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors);
   let html = div + popUp;
   let bestFilm = document.querySelector(".best-film");
   bestFilm.innerHTML = html;
   
 
 
-  // Pour ouvrir la popup
-  let FilmBouton = document.querySelector(".content button.bouton");
-  popup(FilmBouton);
+  // Pour ouvrir la popup ().content button.bouton
+  let filmBtnOpen = document.querySelector("#btn-open"+elementId);
+  //console.log(filmBtnOpen);
+  let filmCross = document.querySelector("#croix"+elementId);
+  //console.log(filmCross);
+  let filmModal = document.querySelector("#myModal"+elementId);
+  //console.log(filmModal);
+  let filmBtnClose = document.querySelector("#close"+elementId);
+  //console.log(filmBtnClose);
+  popup(filmBtnOpen, filmModal, filmCross, filmBtnClose);
 }
 
 async function fetchClassementGenreSuit(apiEndpointGenreSuit){
@@ -212,11 +221,12 @@ function displayFilm(nombreFilms, dataList,cat){
     let i=0;
     while (i < nombreFilms) {
       //console.log(i);
-      let emplacementDomTitre = "#cat"+cat+"-"+i+" .bandeau h2";
+      let codeCategory = "cat"+cat+"-"+i;
+      let emplacementDomTitre = "#"+codeCategory+" .bandeau h2";
       //console.log(emplacementDomTitre);
-      let emplacementDomImag = "#cat"+cat+"-"+i+ " img";
+      let emplacementDomImag = "#"+codeCategory+" img";
       //let film = dataList[i];
-      let [elementImag, elementTitre, elementResum, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementActors] = dataList[i];
+      let [elementId, elementImag, elementTitre, elementResum, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementActors] = dataList[i];
       //let elementTitreFilm = film.title;
       //console.log(elementTitreFilm);
       let titreFilm = document.querySelector(emplacementDomTitre);
@@ -229,18 +239,35 @@ function displayFilm(nombreFilms, dataList,cat){
       
       let catbutton = "#cat"+cat+"-"+i+" button.bouton"
       let anchorButton = document.querySelector(catbutton);
-      let insertModalPart1 = `<div class="myModal-modal">`
-      let popUp = contentPopup(elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors);
+      console.log(anchorButton);
+      anchorButton.id = "btn-open"+elementId;
+      let idModalFilm = "myModal"+codeCategory;
+      let insertModalPart1 = `<div id=${idModalFilm} class="modal">`
+      let popUp = contentPopup(elementId, elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors);
       let insertModal = insertModalPart1 + popUp + `</div>`;
       anchorButton.insertAdjacentHTML("afterend", insertModal);
-      
+      /*
+      // Pour ouvrir la popup
+      let FilmBouton = document.querySelector(".content button.bouton");
+      popup(FilmBouton, idModalFilm);*/
       //console.log(c1F1Bouton);
+      // Pour ouvrir la popup ().content button.bouton
+        // Pour ouvrir la popup ().content button.bouton
+    let filmBtnOpen = document.querySelector("#btn-open"+elementId);
+    console.log(filmBtnOpen);
+    let filmCross = document.querySelector("#croix"+elementId);
+    console.log(filmCross);
+    let filmModal = document.querySelector("#"+idModalFilm);
+    console.log(filmModal);
+    let filmBtnClose = document.querySelector("#close"+elementId);
+    console.log(filmBtnClose);
+    popup(filmBtnOpen, filmModal, filmCross, filmBtnClose);
       i++;
     }
   }
 }
 
-
+/*function affectationModalFilm()*/
 
 function creaCatAutre(){
   let newSection = document.createElement("section");
