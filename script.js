@@ -7,22 +7,14 @@ function menuDeroulant(){
 }
 */
 
+
 // Get the modal
 function popup(btn, modal, croix, close){
-  //var modal = document.querySelector(`#${myModalUnique}`);
-  //var modal = document.getElementById(myModalUnique);
-
-  //var btn = document.querySelector("bouton");
-
-  // Get the <span> element that closes the modal
-  //var croix = document.querySelector(".croix");
-  
+ 
   // When the user clicks on <span> (x), close the modal
   croix.onclick = function() {
     modal.style.display = "none";
   }
-
-  //var close = document.querySelector(".close");
   
   // When the user clicks on <span> (x), close the modal
   close.onclick = function() {
@@ -34,8 +26,6 @@ function popup(btn, modal, croix, close){
     modal.style.display = "block";
   }
 
-  
-
   // When the user clicks anywhere outside of the modal, close it
   window.onclick = function(event) {
     if (event.target == modal) {
@@ -44,18 +34,17 @@ function popup(btn, modal, croix, close){
   }
 }
 
-
-//fonctions
+// requête sur l'API pour trouver le ou les films le(s) mieux classé(s)
 async function dataApi(filters){
-  // requête sur l'API pour trouver le ou les films le(s) mieux classé(s)
   const apiEndpointClassement = "http://localhost:8000/api/v1/titles/"+filters;
   const responseClassement = await fetch(apiEndpointClassement);
   const dataClassement = await responseClassement.json();
   return dataClassement;
 }
 
+
+// Récupération des données de l'API pour un film donné
 async function element(dataIdFilm){
-  // Récupération des données de l'API
   let dataFilm = await dataApi(dataIdFilm);
   let elementIdFilm = dataFilm.id;
   let elementImagFilm = dataFilm.image_url;
@@ -73,11 +62,11 @@ async function element(dataIdFilm){
   return [elementIdFilm, elementImagFilm, elementTitreFilm, elementResumFilm, elementYearFilm, elementGenresFilm, elementRatedFilm, elementDurationFilm, elementCountriesFilm, elementImdbFilm, elementDirectorsFilm, elementActorsFilm]
 }
 
+
+//Création du contenu de la popup
 function contentPopup(elementIdFilm, elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors){
-  //Création du contenu de la popup
   let divPopup = `
-      <!-- Modal content -->
-                
+      <!-- Modal content -->     
       <div class="modal-content" id="content${elementIdFilm}">
         <div class="croix" id="croix${elementIdFilm}">x</div>
         <section class="box">
@@ -104,8 +93,10 @@ function contentPopup(elementIdFilm, elementTitre, elementYear, elementGenres, e
     return(divPopup)
 }
 
+
+// Section : Meilleur film
 async function fetchClassementGeneral(){
-  // Best Film
+  
   const dataClassement = await dataApi("?sort_by=-imdb_score");
   const dataClassBestFilm = dataClassement.results[0];
 
@@ -130,32 +121,31 @@ async function fetchClassementGeneral(){
       <!-- The Modal -->
       <div id="myModal${elementId}" class="modal">
     `;
+  
   // 2) Insertion du code dans la page html
   let popUp = contentPopup(elementId, elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors);
   let html = div + popUp;
   let bestFilm = document.querySelector(".best-film");
   bestFilm.innerHTML = html;
   
-
-
   // Pour ouvrir la popup ().content button.bouton
   let filmBtnOpen = document.querySelector("#btn-open"+elementId);
-  //console.log(filmBtnOpen);
   let filmCross = document.querySelector("#croix"+elementId);
-  //console.log(filmCross);
   let filmModal = document.querySelector("#myModal"+elementId);
-  //console.log(filmModal);
   let filmBtnClose = document.querySelector("#close"+elementId);
-  //console.log(filmBtnClose);
   popup(filmBtnOpen, filmModal, filmCross, filmBtnClose);
 }
 
+
+//Pour les catégories : recherche du sixième film sur la page 2 de l'API
 async function fetchClassementGenreSuit(apiEndpointGenreSuit){
   let responseGenreSuit = await fetch(apiEndpointGenreSuit);
   let dataGenreTotalSuit = await responseGenreSuit.json();  
   dataGenreTotalSuit.results[0];
 }
 
+
+// Pour les catégories : recherche des 6 films classés par genre - cat = position de la catégorie sur la page html
 async function fetchClassementGenre(genre, cat){
   let filters = "?genre="+genre+"&sort_by=-imdb_score";
   let dataGenreTotal = await dataApi(filters);
@@ -166,11 +156,8 @@ async function fetchClassementGenre(genre, cat){
   if (dataGenreNbre < 5){
       for(let i=0; i<dataGenreNbre; i++){
         let dataFilmGenre = dataGenreTotal.results[i];
-        //essai
         let dataFilmGenreId = dataFilmGenre.id;
-        //let filmdetail = await dataApi(dataFilmGenreId);
         let filmdetail = await element(dataFilmGenreId);
-        //dataListGenre.push(dataFilmGenre);
         dataListGenre.push(filmdetail);
       }
       displayFilm(dataGenreNbre, dataListGenre, cat);
@@ -178,30 +165,22 @@ async function fetchClassementGenre(genre, cat){
   else {
     for(let i=0; i<5; i++){
       let dataFilmGenre = dataGenreTotal.results[i];
-      //dataListGenre.push(dataFilmGenre);
-      //essai
       let dataFilmGenreId = dataFilmGenre.id;
-      //let filmdetail = await dataApi(dataFilmGenreId);
       let filmdetail = await element(dataFilmGenreId);
       dataListGenre.push(filmdetail);
     }
-    //let apiEndpointGenreSuit = dataGenreTotal.next;
     let filtersPage2 = "?genre="+genre+"&page=2&sort_by=-imdb_score";
-    //let responseGenreSuit = await fetch(apiEndpointGenreSuit);
-    //let dataGenreTotalSuit = await responseGenreSuit.json();
     let dataGenreTotalSuit = await dataApi(filtersPage2);    
     let dataFilmGenreSuit = dataGenreTotalSuit.results[0];
-    //essai
     let dataFilmGenreSuitId = dataFilmGenreSuit.id;
-    //let filmdetailSuit = await dataApi(dataFilmGenreSuitId);
     let filmdetailSuit = await element(dataFilmGenreSuitId);
-    //dataListGenre.push(dataFilmGenre);
     dataListGenre.push(filmdetailSuit);
-    //dataListGenre.push(dataFilmGenreSuit);
     }
   displayFilm(nombreFilms, dataListGenre, cat);
 }
 
+
+// Affichage des films + données de l'API sur le site
 function displayFilm(nombreFilms, dataList,cat){
   if (nombreFilms !== dataList.length){
     let nbreFilmsmanquants = nombreFilms-dataList.length;
@@ -220,19 +199,12 @@ function displayFilm(nombreFilms, dataList,cat){
   else{
     let i=0;
     while (i < nombreFilms) {
-      //console.log(i);
       let codeCategory = "cat"+cat+"-"+i;
       let emplacementDomTitre = "#"+codeCategory+" .bandeau h2";
-      //console.log(emplacementDomTitre);
       let emplacementDomImag = "#"+codeCategory+" img";
-      //let film = dataList[i];
       let [elementId, elementImag, elementTitre, elementResum, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementActors] = dataList[i];
-      //let elementTitreFilm = film.title;
-      //console.log(elementTitreFilm);
       let titreFilm = document.querySelector(emplacementDomTitre);
-      //console.log(titreFilm);
       titreFilm.textContent = elementTitre;
-      //let elementImagFilm = film.image_url;
       let imagFilm = document.querySelector(emplacementDomImag);
       imagFilm.src = elementImag;
       imagFilm.alt = titreFilm.textContent;
@@ -246,22 +218,15 @@ function displayFilm(nombreFilms, dataList,cat){
       let popUp = contentPopup(elementId, elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors);
       let insertModal = insertModalPart1 + popUp + `</div>`;
       anchorButton.insertAdjacentHTML("afterend", insertModal);
-      /*
-      // Pour ouvrir la popup
-      let FilmBouton = document.querySelector(".content button.bouton");
-      popup(FilmBouton, idModalFilm);*/
-      //console.log(c1F1Bouton);
-      // Pour ouvrir la popup ().content button.bouton
-        // Pour ouvrir la popup ().content button.bouton
-    let filmBtnOpen = document.querySelector("#btn-open"+elementId);
-    console.log(filmBtnOpen);
-    let filmCross = document.querySelector("#croix"+elementId);
-    console.log(filmCross);
-    let filmModal = document.querySelector("#"+idModalFilm);
-    console.log(filmModal);
-    let filmBtnClose = document.querySelector("#close"+elementId);
-    console.log(filmBtnClose);
-    popup(filmBtnOpen, filmModal, filmCross, filmBtnClose);
+      
+      let filmBtnOpen = document.querySelector("#btn-open"+elementId);
+      let filmCross = document.querySelector("#croix"+elementId);
+      console.log(filmCross);
+      let filmModal = document.querySelector("#"+idModalFilm);
+      console.log(filmModal);
+      let filmBtnClose = document.querySelector("#close"+elementId);
+      console.log(filmBtnClose);
+      popup(filmBtnOpen, filmModal, filmCross, filmBtnClose);
       i++;
     }
   }
@@ -298,78 +263,3 @@ function genre(){
 }
 genre();
 
-
-
-/*
-let c1F1Bouton = document.querySelector("#cat1-0 button.bouton a");
-//console.log(c1F1Bouton);
-
-
-
-
-//Film 2
-let c1F2Bouton = document.querySelector("#cat1-1 button.bouton a");
-//console.log(c1F2Bouton);
-
-//Film 3
-let c1F3Bouton = document.querySelector("#cat1-2 button.bouton a");
-//console.log(c1F3Bouton);
-
-//Film 4
-let c1F4Bouton = document.querySelector("#cat1-3 button.bouton a");
-//console.log(c1F4Bouton);
-
-//Film 5
-let c1F5Bouton = document.querySelector("#cat1-4 button.bouton a");
-//console.log(c1F5Bouton);
-
-//Film 6
-let c1F6Bouton = document.querySelector("#cat1-5 button.bouton a");
-//console.log(c1F6Bouton);
-
-// Catégorie 2 : Fantasy
-
-
-
-//Film 1
-
-
-let c2F1Bouton = document.querySelector("#cat2-0 button.bouton a");
-//console.log(c2F1Bouton);
-
-
-//Film 2
-
-
-let c2F2Bouton = document.querySelector("#cat2-1 button.bouton a");
-//console.log(c2F2Bouton);
-
-
-//Film 3
-
-
-let c2F3Bouton = document.querySelector("#cat2-2 button.bouton a");
-//console.log(c2F3Bouton);
-
-
-//Film 4
-
-
-let c2F4Bouton = document.querySelector("#cat2-3 button.bouton a");
-//console.log(c1F4Bouton);
-
-
-//Film 5
-
-
-let c2F5Bouton = document.querySelector("#cat2-4 button.bouton a");
-//console.log(c2F5Bouton);
-
-
-//Film 6
-
-
-let c2F6Bouton = document.querySelector("#cat2-5 button.bouton a");
-//console.log(c2F6Bouton);
-
-//category 3 ...*/
