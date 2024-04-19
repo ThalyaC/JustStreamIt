@@ -161,6 +161,7 @@ async function fetchClassementGenre(genre, cat){
         dataListGenre.push(filmdetail);
       }
       displayFilm(dataGenreNbre, dataListGenre, cat);
+      
     }
   else {
     for(let i=0; i<5; i++){
@@ -184,13 +185,9 @@ async function fetchClassementGenre(genre, cat){
 function displayFilm(nombreFilms, dataList,cat){
   if (nombreFilms !== dataList.length){
     let nbreFilmsmanquants = nombreFilms-dataList.length;
-    console.log(nbreFilmsmanquants);
     let j=nbreFilmsmanquants-2;
-    console.log(j);
     while (j < nombreFilms){
-      console.log(j);
       let idResearch = "cat"+cat+"-"+j;
-      console.log(idResearch);
       let divMask = document.getElementById(idResearch);
       divMask.remove();
       j++;
@@ -211,28 +208,104 @@ function displayFilm(nombreFilms, dataList,cat){
       
       let catbutton = "#cat"+cat+"-"+i+" button.bouton"
       let anchorButton = document.querySelector(catbutton);
-      console.log(anchorButton);
       anchorButton.id = "btn-open"+elementId;
       let idModalFilm = "myModal"+codeCategory;
       let insertModalPart1 = `<div id=${idModalFilm} class="modal">`
       let popUp = contentPopup(elementId, elementTitre, elementYear, elementGenres, elementRated, elementDuration, elementCountries, elementImdb, elementDirectors, elementImag, elementResum, elementActors);
       let insertModal = insertModalPart1 + popUp + `</div>`;
       anchorButton.insertAdjacentHTML("afterend", insertModal);
-      
+
       let filmBtnOpen = document.querySelector("#btn-open"+elementId);
       let filmCross = document.querySelector("#croix"+elementId);
-      console.log(filmCross);
       let filmModal = document.querySelector("#"+idModalFilm);
-      console.log(filmModal);
       let filmBtnClose = document.querySelector("#close"+elementId);
-      console.log(filmBtnClose);
       popup(filmBtnOpen, filmModal, filmCross, filmBtnClose);
       i++;
     }
   }
 }
 
+/*
+//Associe fetchClassementGenre + displayFilm
+async function displayFilmsSite(genre, cat){
+  let [dataGenreNbre, dataListGenre, cat] = await fetchClassementGenre(genre, cat);
+  displayFilm(dataGenreNbre, dataListGenre, cat);
+}*/
+
 /*function affectationModalFilm()*/
+
+function creaCat4or5(cat){
+  let newSectionCat = `
+  <section classe="category${cat}">
+      <div class="film4-5" id="cat${cat}-0">
+          
+        <div class="bandeau">
+            <h2>Titanic</h2>
+            <button class="bouton">Détails</button>
+        </div>
+        
+        <img src="images/titanic 1.png", alt="Affiche de Titanic">
+      </div>
+      
+      <div class="film4-5" id="cat${cat}-1">
+          
+        <div class="bandeau">
+            <h2>Retour vers le futur</h2>
+            <button class="bouton">Détails</button>
+        </div>
+        
+        <img src="images/backtofuture 1.png", alt="Affiche de Retour vers le futur">
+      </div>
+
+      <div class="film4-5" id="cat${cat}-2">
+          
+        <div class="bandeau">
+            <h2>Scarface</h2>
+            <button class="bouton">Détails</button>
+        </div>
+        
+        <img src="images/scarface 1.png", alt="Affiche de Scarface">
+      </div>
+
+      <div class="film4-5" id="cat${cat}-3">
+          
+        <div class="bandeau">
+            <h2>Pulp Fiction</h2>
+            <button class="bouton">Détails</button>
+        </div>
+        
+        <img src="images/pulpfiction 1.png", alt="Affiche de Pulp Fiction">
+      </div>
+
+      <div class="film4-5" id="cat${cat}-4">
+          
+        <div class="bandeau">
+            <h2>Le Parrain</h2>
+            <button class="bouton">Détails</button>
+        </div>
+        
+        <img src="images/godfather 1.png", alt="Affiche du Parrain">
+      </div>
+
+      <div class="film4-5" id="cat${cat}-5">
+          
+        <div class="bandeau">
+            <h2>Alien</h2>
+            <button class="bouton">Détails</button>
+        </div>
+        
+        <img src="images/alien 1.png", alt="Affiche d'Alien'">
+      </div>
+    </section>
+    <section class="suite moins">
+      <button class="bouton pos">Voir moins</button>;
+  </section>`
+  console.log(newSectionCat);    
+  let nameDomCat4or5 = ".category-autre"+cat;
+  let emplacementDomCat4or5 = document.querySelector(nameDomCat4or5);
+  console.log(emplacementDomCat4or5);
+  emplacementDomCat4or5.insertAdjacentHTML("afterend", newSectionCat);
+}
 
 function creaCatAutre(){
   let newSection = document.createElement("section");
@@ -256,9 +329,9 @@ fetchClassementGenre("Sci-Fi", 3);
 function genre(){
   let menuGenre = document.getElementById("choix1");
   menuGenre.addEventListener("change", (event) =>{
+    creaCat4or5(4);
+    console.log(event.target.value);
     fetchClassementGenre(event.target.value, 4);
-    creaCatAutre();
-
   })
 }
 genre();
