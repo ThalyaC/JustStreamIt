@@ -1,11 +1,4 @@
 /* Pour démarrer le serveur, lancer l'environnement virtuel puis python manage.py runserver */
-/*
-function menuDeroulant(){
-  const menuGenre = document.getElementById('choix1');
-  const indexSelect = menuGenre.value;
-  prompt='index sélectionné:'+ indexSelect;
-}
-*/
 
 
 // Get the modal
@@ -225,93 +218,104 @@ function displayFilm(nombreFilms, dataList,cat){
   }
 }
 
-/*
-//Associe fetchClassementGenre + displayFilm
-async function displayFilmsSite(genre, cat){
-  let [dataGenreNbre, dataListGenre, cat] = await fetchClassementGenre(genre, cat);
-  displayFilm(dataGenreNbre, dataListGenre, cat);
-}*/
 
-/*function affectationModalFilm()*/
-
+// Pour les catégories 4 et 5 (menus déroulants)
+// 1. Création du html
 function creaCat4or5(cat){
   let newSectionCat = `
-  <section classe="category${cat}">
-      <div class="film4-5" id="cat${cat}-0">
-          
-        <div class="bandeau">
-            <h2>Titanic</h2>
-            <button class="bouton">Détails</button>
-        </div>
+  
+    <div class="film4-5" id="cat${cat}-0">
         
-        <img src="images/titanic 1.png", alt="Affiche de Titanic">
+      <div class="bandeau">
+          <h2></h2>
+          <button class="bouton">Détails</button>
       </div>
       
-      <div class="film4-5" id="cat${cat}-1">
-          
-        <div class="bandeau">
-            <h2>Retour vers le futur</h2>
-            <button class="bouton">Détails</button>
-        </div>
+      <img>
+    </div>
+    
+    <div class="film4-5" id="cat${cat}-1">
         
-        <img src="images/backtofuture 1.png", alt="Affiche de Retour vers le futur">
+      <div class="bandeau">
+          <h2></h2>
+          <button class="bouton">Détails</button>
       </div>
+      
+      <img>
+    </div>
 
-      <div class="film4-5" id="cat${cat}-2">
-          
-        <div class="bandeau">
-            <h2>Scarface</h2>
-            <button class="bouton">Détails</button>
-        </div>
+    <div class="film4-5" id="cat${cat}-2">
         
-        <img src="images/scarface 1.png", alt="Affiche de Scarface">
+      <div class="bandeau">
+          <h2></h2>
+          <button class="bouton">Détails</button>
       </div>
+      
+      <img>
+    </div>
 
-      <div class="film4-5" id="cat${cat}-3">
-          
-        <div class="bandeau">
-            <h2>Pulp Fiction</h2>
-            <button class="bouton">Détails</button>
-        </div>
+    <div class="film4-5" id="cat${cat}-3">
         
-        <img src="images/pulpfiction 1.png", alt="Affiche de Pulp Fiction">
+      <div class="bandeau">
+          <h2></h2>
+          <button class="bouton">Détails</button>
       </div>
+      
+      <img>
+    </div>
 
-      <div class="film4-5" id="cat${cat}-4">
-          
-        <div class="bandeau">
-            <h2>Le Parrain</h2>
-            <button class="bouton">Détails</button>
-        </div>
+    <div class="film4-5" id="cat${cat}-4">
         
-        <img src="images/godfather 1.png", alt="Affiche du Parrain">
+      <div class="bandeau">
+          <h2></h2>
+          <button class="bouton">Détails</button>
       </div>
+      
+      <img>
+    </div>
 
-      <div class="film4-5" id="cat${cat}-5">
-          
-        <div class="bandeau">
-            <h2>Alien</h2>
-            <button class="bouton">Détails</button>
-        </div>
+    <div class="film4-5" id="cat${cat}-5">
         
-        <img src="images/alien 1.png", alt="Affiche d'Alien'">
+      <div class="bandeau">
+          <h2></h2>
+          <button class="bouton">Détails</button>
       </div>
-    </section>
-    <section class="suite moins">
-      <button class="bouton pos">Voir moins</button>;
-  </section>`
-  console.log(newSectionCat);    
-  let nameDomCat4or5 = ".category-autre"+cat;
-  let emplacementDomCat4or5 = document.querySelector(nameDomCat4or5);
-  console.log(emplacementDomCat4or5);
-  emplacementDomCat4or5.insertAdjacentHTML("afterend", newSectionCat);
+      
+      <img>
+    </div>
+  </section>
+  <section class="suite moins">
+    <button class="bouton pos">Voir moins</button>;
+  `
+  return (newSectionCat)
 }
 
-function creaCatAutre(){
-  let newSection = document.createElement("section");
-  let parentNewSection = document.querySelector("category-autre1");
-  parentNewSection.appendChild(newSection);
-}
+// 2. Raccordement au menu déroulant
+document.addEventListener("DOMContentLoaded", function() {
+  const menuDeroulant = document.getElementById("choix1");
+  const conteneurFlex = document.getElementById("category4");
+  // Écouteur d'événement pour le changement d'option
+  menuDeroulant.addEventListener("change", function() {
+      const optionSelectionnee = menuDeroulant.value;
+      console.log(optionSelectionnee);
+      let contentDiv4 = creaCat4or5(4);
+      conteneurFlex.innerHTML = contentDiv4;
+      fetchClassementGenre(optionSelectionnee, 4);
+  });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+  const menuDeroulant = document.getElementById("choix2");
+  const conteneurFlex = document.getElementById("category5");
+  // Écouteur d'événement pour le changement d'option
+  menuDeroulant.addEventListener("change", function() {
+      const optionSelectionnee = menuDeroulant.value;
+      console.log(optionSelectionnee);
+      let contentDiv5 = creaCat4or5(5);
+      conteneurFlex.innerHTML = contentDiv5;
+      fetchClassementGenre(optionSelectionnee, 5);
+  });
+});
 
 // _________
 
@@ -326,13 +330,4 @@ fetchClassementGeneral();
 fetchClassementGenre("Mystery", 1);
 fetchClassementGenre("Fantasy", 2);
 fetchClassementGenre("Sci-Fi", 3);
-function genre(){
-  let menuGenre = document.getElementById("choix1");
-  menuGenre.addEventListener("change", (event) =>{
-    creaCat4or5(4);
-    console.log(event.target.value);
-    fetchClassementGenre(event.target.value, 4);
-  })
-}
-genre();
 
