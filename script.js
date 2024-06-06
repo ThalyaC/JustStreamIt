@@ -316,6 +316,11 @@ document.addEventListener("DOMContentLoaded", function() {
       fetchClassementGenre(optionSelectionnee, 5);
   });
 });
+/*
+close.onclick = function() {
+  modal.style.display = "none";
+}
+*/
 
 // _________
 
