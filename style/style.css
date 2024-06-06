@@ -106,7 +106,7 @@ p{
 
 }
   /* The Close Button */
-  .close {
+  .modal-content .close {
     color: #aaaaaa;
     float: right;
     font-size: 28px;
@@ -313,11 +313,14 @@ select{
 }
 
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1024px) {
     * {
         margin: 0;
         padding: 0;
      }
+     .modal-content .image-resp1, .modal-content .close{
+        display:none;
+    }
     header h1, main h1{
         font-size: 3.5em;
     }
@@ -344,19 +347,14 @@ select{
         height: auto;
 
     }
-}
 
-/*Pour la popup*/
-@media screen and (max-width: 1024px) {
     .modal-content h1{
         font-size:3.5em;
     }
     .box{
         display:block;
     }
-    .modal-content .image-resp1, .modal-content button{
-        display:none;
-    }
+    
     .modal-content .croix, .modal-content .image-resp2{
         display: inline-block;
     }
