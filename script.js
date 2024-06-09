@@ -284,8 +284,7 @@ function creaCat4or5(cat){
       <img>
     </div>
   </section>
-  <section class="suite moins">
-    <button class="bouton pos">Voir moins</button>;
+  <button class="suite bouton pos" id="s${cat}" onclick="toggleImages(${cat})">Voir plus</button>;
   `
   return (newSectionCat)
 }
@@ -322,7 +321,27 @@ close.onclick = function() {
 }
 */
 
-// _________
+// Bouton plus ou moins
+
+let imagesVisibles = false;
+
+function toggleImages(cat) {
+  let image1 = document.getElementById('cat'+cat+'-4');
+  let image2 = document.getElementById('cat'+cat+'-5');
+  let button = document.getElementById('s'+cat);
+
+  if (imagesVisibles) {
+      image1.style.display = "none";
+      image2.style.display = "none";
+      button.textContent = "Afficher plus";
+      imagesVisibles = false;
+  } else {
+      image1.style.display = "block";
+      image2.style.display = "block";
+      button.textContent = "Afficher moins";
+      imagesVisibles = true;
+  }
+}
 
 //BEST FILM
 fetchClassementGeneral();
